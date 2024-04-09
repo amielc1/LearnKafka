@@ -11,7 +11,7 @@ namespace WikimediaKafkaProducer.Services
         public EventStreamService(HttpClient httpClient, IOptions<EventStreamSettings> eventStreamSettings)
         {
             _httpClient = httpClient;
-            _streamUrl = eventStreamSettings.Value.WikimediaStreamUrl; 
+            _streamUrl = eventStreamSettings.Value.WikimediaStreamUrl;
         }
 
         public async IAsyncEnumerable<string> GetEventsAsync()

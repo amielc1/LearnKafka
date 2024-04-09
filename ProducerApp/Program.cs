@@ -14,7 +14,7 @@ var config = new ProducerConfig { BootstrapServers = "localhost:19092" };
 // Kafka framework creating producer
 #endregion
 //2 Build Kafka Producer
-using var p = new ProducerBuilder<Null, string>(config).Build(); 
+using var p = new ProducerBuilder<Null, string>(config).Build();
 try
 {
     //3 Listen to user input for producing messages
@@ -45,7 +45,7 @@ try
 // Kafka related exception 
 #endregion
 //8 handle kafka exceptions
-catch (ProduceException<Null, string> e) 
+catch (ProduceException<Null, string> e)
 {
     #region 
     // log error, limited to console logger

@@ -1,7 +1,6 @@
 ﻿using Confluent.Kafka;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace WikimediaKafkaProducer.Services
 {
@@ -13,9 +12,17 @@ namespace WikimediaKafkaProducer.Services
 
         public KafkaProducerService(string bootstrapServers, string topicName, ILogger<KafkaProducerService> logger)
         {
-            _producer = new ProducerBuilder<Null, string>(new ProducerConfig { BootstrapServers = bootstrapServers }).Build();
+            var pc = new ProducerConfig
+            {
+                BootstrapServers = bootstrapServers, 
+                Acks = Acks.All, // ensure ack from all replicas
+                MessageSendMaxRetries = int.MaxValue,
+                EnableIdempotence = true, // ordering
+            };
+            _producer = new ProducerBuilder<Null, string>(pc).Build();
             _topicName = topicName;
             _logger = logger;
+            LogConfiguration(pc);
         }
 
         public async Task ProduceAsync(string message)
@@ -36,6 +43,17 @@ namespace WikimediaKafkaProducer.Services
         {
             _producer.Flush(TimeSpan.FromSeconds(10));
             _logger.LogInformation("Kafka producer flushed.");
+        }
+        private void LogConfiguration(ProducerConfig config)
+        {
+            // Serialize the ProducerConfig object to JSON
+            var configJson = JsonSerializer.Serialize(config, new JsonSerializerOptions
+            {
+                WriteIndented = true, // For better readability in logs
+                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+            });
+
+            _logger.LogInformation($"ProducerConfig: {configJson}");
         }
     }
 }

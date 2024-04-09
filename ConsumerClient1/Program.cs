@@ -18,7 +18,8 @@ using var c = new ConsumerBuilder<Ignore, string>(conf).Build();
 c.Subscribe("AmielTopic");
 
 var cts = new CancellationTokenSource();
-Console.CancelKeyPress += (_, e) => {
+Console.CancelKeyPress += (_, e) =>
+{
     e.Cancel = true; // prevent the process from terminating.
     cts.Cancel();
 };
@@ -43,7 +44,7 @@ try
         #region
         // kafka exception
         #endregion
-        catch (ConsumeException e) 
+        catch (ConsumeException e)
         {
             #region
             // log error, limited to console logger
@@ -58,5 +59,5 @@ catch (OperationCanceledException)
     // Kafka Logic, we don't need to know this in our application logic, alternative framework may not have this method 
     #endregion
     // Ensure the consumer leaves the group cleanly and final offsets are committed.
-    c.Close(); 
+    c.Close();
 }

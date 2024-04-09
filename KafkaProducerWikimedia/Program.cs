@@ -26,11 +26,12 @@ namespace WikimediaKafkaProducer
                 {
                     var configuration = hostContext.Configuration;
                     var kafkaSettings = configuration.GetSection("Kafka").Get<KafkaSettings>();
-                    
+
                     services.Configure<EventStreamSettings>(hostContext.Configuration.GetSection("EventStream"));
 
-                    services.AddSingleton<HttpClient>()
-                        .AddSingleton<EventStreamService>() 
+                    services
+                        .AddSingleton<HttpClient>()
+                        .AddSingleton<EventStreamService>()
                         // Register KafkaProducerService with necessary dependencies
                         .AddSingleton<KafkaProducerService>(serviceProvider =>
                         {

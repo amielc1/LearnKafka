@@ -11,7 +11,8 @@ using var c = new ConsumerBuilder<Ignore, string>(conf).Build();
 c.Subscribe("AmielTopic");
 
 var cts = new CancellationTokenSource();
-Console.CancelKeyPress += (_, e) => {
+Console.CancelKeyPress += (_, e) =>
+{
     e.Cancel = true; // prevent the process from terminating.
     cts.Cancel();
 };
@@ -23,7 +24,7 @@ try
         try
         {
             var cr = c.Consume(cts.Token);
-            
+
             Console.WriteLine(
                 $"Consumed message '{cr?.Message.Value}', at: '{cr?.TopicPartitionOffset}'");
         }
