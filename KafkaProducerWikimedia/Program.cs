@@ -1,8 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using KafkaProducerWikimedia.Config;
 using WikimediaKafkaProducer.Services;
 
 namespace WikimediaKafkaProducer
@@ -29,9 +32,21 @@ namespace WikimediaKafkaProducer
 
         static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureServices((_, services) =>
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    config.SetBasePath(Directory.GetCurrentDirectory());
+                    config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+                })
+                .ConfigureServices((hostContext, services) =>
+                {
+                    var configuration = hostContext.Configuration;
+                    var kafkaConfig = configuration.GetSection("Kafka").Get<KafkaSettings>();
+
                     services.AddSingleton<HttpClient>()
-                        .AddSingleton<EventStreamService>()
-                        .AddSingleton<KafkaProducerService>(sp => new KafkaProducerService("localhost:19092", "wikimedia-recent-changes3")));
+                            .AddSingleton<EventStreamService>()
+                            .AddSingleton<KafkaProducerService>(sp => new KafkaProducerService(kafkaConfig.BootstrapServers, kafkaConfig.TopicName));
+                });
     }
+
+
 }
