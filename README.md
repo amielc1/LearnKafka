@@ -5,4 +5,6 @@ For Kafka installation, use [this ](https://www.conduktor.io/get-started/ "‌")
 3. command “docker compose up” from the folder that contains this file
 4. Make sure the installation is by using [http://localhost:8080/console/home](http://localhost:8080/console/home "‌")
 
-5. ![Kafka Docker](https://github.com/amielc1/LearnKafka/assets/2409265/9f17c172-2101-416c-949b-7c9946a3c8a5)
+![Docker Desktop](https://github.com/amielc1/LearnKafka/assets/2409265/2116571e-5463-4fbd-a454-df553c4738aa)
+![Learnkafka-conduktor-console](https://github.com/amielc1/LearnKafka/assets/2409265/1a97316a-0afd-413e-bb1e-6ef645b34057)
+![Producer Consumer](https://github.com/amielc1/LearnKafka/assets/2409265/598d238e-e6dc-4ab3-a2d0-57f69868ac6a)
