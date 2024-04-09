@@ -1,33 +1,18 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using KafkaProducerWikimedia.Config;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.IO;
-using System.Net.Http;
-using System.Threading.Tasks;
-using KafkaProducerWikimedia.Config;
+using Microsoft.Extensions.Logging;
 using WikimediaKafkaProducer.Services;
 
 namespace WikimediaKafkaProducer
 {
-    class Program
+    public class Program
     {
-        static async Task Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
-
-            var eventStreamService = host.Services.GetRequiredService<EventStreamService>();
-            var kafkaProducerService = host.Services.GetRequiredService<KafkaProducerService>();
-
-            Console.WriteLine("Starting to listen to Wikimedia recent changes...");
-
-            await foreach (var line in eventStreamService.GetEventsAsync())
-            {
-                Console.WriteLine($"Producing record: {line}");
-                await kafkaProducerService.ProduceAsync(line);
-            }
-
-            kafkaProducerService.Flush();
+            await host.RunAsync();
         }
 
         static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -40,13 +25,19 @@ namespace WikimediaKafkaProducer
                 .ConfigureServices((hostContext, services) =>
                 {
                     var configuration = hostContext.Configuration;
-                    var kafkaConfig = configuration.GetSection("Kafka").Get<KafkaSettings>();
+                    var kafkaSettings = configuration.GetSection("Kafka").Get<KafkaSettings>();
+                    
+                    services.Configure<EventStreamSettings>(hostContext.Configuration.GetSection("EventStream"));
 
                     services.AddSingleton<HttpClient>()
-                            .AddSingleton<EventStreamService>()
-                            .AddSingleton<KafkaProducerService>(sp => new KafkaProducerService(kafkaConfig.BootstrapServers, kafkaConfig.TopicName));
+                        .AddSingleton<EventStreamService>() 
+                        // Register KafkaProducerService with necessary dependencies
+                        .AddSingleton<KafkaProducerService>(serviceProvider =>
+                        {
+                            var logger = serviceProvider.GetRequiredService<ILogger<KafkaProducerService>>();
+                            return new KafkaProducerService(kafkaSettings.BootstrapServers, kafkaSettings.TopicName, logger);
+                        })
+                        .AddHostedService<WorkerService>();
                 });
     }
-
-
 }
