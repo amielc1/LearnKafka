@@ -14,6 +14,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{6ECD10
 		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KafkaProducerWikimedia", "KafkaProducerWikimedia\KafkaProducerWikimedia.csproj", "{C08AC9EB-A39A-4606-9830-CEA058409919}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SimpleDemo", "SimpleDemo", "{01189A7A-20CC-45AA-AB71-5A8A40FB873C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,9 +36,18 @@ Global
 		{3CC8F50C-472A-4E5C-9B81-D7CC05B74B2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CC8F50C-472A-4E5C-9B81-D7CC05B74B2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CC8F50C-472A-4E5C-9B81-D7CC05B74B2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C08AC9EB-A39A-4606-9830-CEA058409919}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C08AC9EB-A39A-4606-9830-CEA058409919}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C08AC9EB-A39A-4606-9830-CEA058409919}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C08AC9EB-A39A-4606-9830-CEA058409919}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D0934351-FED4-4109-913C-566046E573CC} = {01189A7A-20CC-45AA-AB71-5A8A40FB873C}
+		{1F1B9D0B-4097-45BB-A9CA-356B1D61EAF1} = {01189A7A-20CC-45AA-AB71-5A8A40FB873C}
+		{3CC8F50C-472A-4E5C-9B81-D7CC05B74B2B} = {01189A7A-20CC-45AA-AB71-5A8A40FB873C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0BB9C495-FD92-472E-9F7F-529C92E0231F}

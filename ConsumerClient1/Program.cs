@@ -15,7 +15,7 @@ var conf = new ConsumerConfig
 };
 
 using var c = new ConsumerBuilder<Ignore, string>(conf).Build();
-c.Subscribe("amiel_topic");
+c.Subscribe("AmielTopic");
 
 var cts = new CancellationTokenSource();
 Console.CancelKeyPress += (_, e) => {
