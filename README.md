@@ -1,7 +1,7 @@
 ### Use Application : 
 1. Run `docker compose up`
 2. Run [conduktor UI](http://localhost:8080/console/home)
-3. Run [Seq Server](http://localhost:8080/console/home)
+3. Run [Seq Server](http://localhost:5341/)
 
 ### Installations :
 For Kafka installation, use [this ](https://www.conduktor.io/get-started/ "‌") guide (with curl), I used these steps:
