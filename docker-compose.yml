@@ -114,6 +114,15 @@ services:
         condition: service_healthy
       conduktor-gateway:
         condition: service_healthy
+
+  seq:
+    container_name: seq
+    image: datalust/seq:latest
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - "5341:80"
+
 volumes:
   pg_data: {}
   conduktor_data: {}
