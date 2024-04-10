@@ -1,9 +1,14 @@
-﻿using KafkaProducerWikimedia.Config;
+﻿using System;
+using System.IO;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using WikimediaKafkaProducer.Services;
+using KafkaProducerWikimedia.Config;
 
 namespace WikimediaKafkaProducer
 {
@@ -11,12 +16,32 @@ namespace WikimediaKafkaProducer
     {
         public static async Task Main(string[] args)
         {
-            var host = CreateHostBuilder(args).Build();
-            await host.RunAsync();
+            // Configure Serilog
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(Configuration)
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .WriteTo.Seq("http://localhost:5341") // Update this URL if your Seq instance is running elsewhere
+                .CreateLogger();
+
+            try
+            {
+                var host = CreateHostBuilder(args).Build();
+                await host.RunAsync();
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Host terminated unexpectedly");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
         static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .UseSerilog() // Use Serilog for logging
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
                     config.SetBasePath(Directory.GetCurrentDirectory());
@@ -32,7 +57,6 @@ namespace WikimediaKafkaProducer
                     services
                         .AddSingleton<HttpClient>()
                         .AddSingleton<EventStreamService>()
-                        // Register KafkaProducerService with necessary dependencies
                         .AddSingleton<KafkaProducerService>(serviceProvider =>
                         {
                             var logger = serviceProvider.GetRequiredService<ILogger<KafkaProducerService>>();
@@ -40,5 +64,11 @@ namespace WikimediaKafkaProducer
                         })
                         .AddHostedService<WorkerService>();
                 });
+
+        // Assume Configuration is a static property or method that retrieves the IConfiguration
+        public static IConfiguration Configuration { get; } = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .Build();
     }
 }
