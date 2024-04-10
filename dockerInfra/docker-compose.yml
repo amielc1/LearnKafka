@@ -1,16 +1,7 @@
-version: '3.4'
+version: '3.8'
 
-services:
-  kafkaproducerwikimedia:
-    environment:
-      - Kafka__BootstrapServers=redpanda-0:9092
-    image: ${DOCKER_REGISTRY-}kafkaproducerwikimedia
-    build:
-      context: .
-      dockerfile: KafkaProducerWikimedia/Dockerfile
-    depends_on:
-      - seq
-
+services:  
+  
   postgresql:
     image: postgres:14
     hostname: postgresql

@@ -9,14 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsumerClient2", "Consumer
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProducerApp", "ProducerApp\ProducerApp.csproj", "{3CC8F50C-472A-4E5C-9B81-D7CC05B74B2B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{6ECD102C-7854-4633-9E2C-024BC2CAF0AE}"
-	ProjectSection(SolutionItems) = preProject
-		docker-compose.yml = docker-compose.yml
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KafkaProducerWikimedia", "KafkaProducerWikimedia\KafkaProducerWikimedia.csproj", "{C08AC9EB-A39A-4606-9830-CEA058409919}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KafkaProducerWikimedia", "KafkaProducerWikimedia\KafkaProducerWikimedia.csproj", "{C08AC9EB-A39A-4606-9830-CEA058409919}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SimpleDemo", "SimpleDemo", "{01189A7A-20CC-45AA-AB71-5A8A40FB873C}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{8585C8B5-539C-4770-8738-695BF2D70254}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,6 +37,10 @@ Global
 		{C08AC9EB-A39A-4606-9830-CEA058409919}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C08AC9EB-A39A-4606-9830-CEA058409919}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C08AC9EB-A39A-4606-9830-CEA058409919}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8585C8B5-539C-4770-8738-695BF2D70254}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8585C8B5-539C-4770-8738-695BF2D70254}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8585C8B5-539C-4770-8738-695BF2D70254}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8585C8B5-539C-4770-8738-695BF2D70254}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
