@@ -15,9 +15,10 @@ namespace WikimediaKafkaProducer.Services
             var pc = new ProducerConfig
             {
                 BootstrapServers = bootstrapServers, 
+                //settings for safe producer
                 Acks = Acks.All, // ensure ack from all replicas
-                MessageSendMaxRetries = int.MaxValue,
-                EnableIdempotence = true, // ordering
+                MessageSendMaxRetries = int.MaxValue, // retry until timeout reached
+                EnableIdempotence = true, // duplicate are not introduced due to network retry
             };
             _producer = new ProducerBuilder<Null, string>(pc).Build();
             _topicName = topicName;
