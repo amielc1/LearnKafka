@@ -19,6 +19,10 @@ namespace WikimediaKafkaProducer.Services
                 Acks = Acks.All, // ensure ack from all replicas
                 MessageSendMaxRetries = int.MaxValue, // retry until timeout reached
                 EnableIdempotence = true, // duplicate are not introduced due to network retry
+
+                LingerMs = 20,
+                BatchSize = 32*1024,
+
             };
             _producer = new ProducerBuilder<Null, string>(pc).Build();
             _topicName = topicName;
