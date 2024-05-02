@@ -53,7 +53,7 @@ namespace KafkaConsumerWikimedia
                         .AddSingleton<KafkaConsumerService>(serviceProvider =>
                         {
                             var logger = serviceProvider.GetRequiredService<ILogger<KafkaConsumerService>>();
-                            return new KafkaConsumerService(kafkaSettings.BootstrapServers, kafkaSettings.TopicName, kafkaSettings.GroupId, logger);
+                            return new KafkaConsumerService(kafkaSettings.BootstrapServers, kafkaSettings.TopicName, kafkaSettings.GroupId);
                         })
                         .AddHostedService<WorkerService>();
                 });

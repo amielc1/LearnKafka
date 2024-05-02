@@ -1,5 +1,5 @@
 ﻿using Confluent.Kafka;
-using Microsoft.Extensions.Logging;
+using Serilog;
 using System.Text.Json;
 
 namespace WikimediaKafkaProducer.Services
@@ -7,11 +7,10 @@ namespace WikimediaKafkaProducer.Services
     public class KafkaProducerService
     {
         private readonly IProducer<Null, string> _producer;
-        private readonly string _topicName;
-        private readonly ILogger<KafkaProducerService> _logger;
+        private readonly string _topicName; 
         private readonly ProducerConfig _producerConfig;    
 
-        public KafkaProducerService(string bootstrapServers, string topicName, ILogger<KafkaProducerService> logger)
+        public KafkaProducerService(string bootstrapServers, string topicName )
         {
             _producerConfig = new ProducerConfig
             {
@@ -26,22 +25,21 @@ namespace WikimediaKafkaProducer.Services
 
             };
             _producer = new ProducerBuilder<Null, string>(_producerConfig).Build();
-            _topicName = topicName;
-            _logger = logger;
+            _topicName = topicName; 
             LogConfiguration(_producerConfig);
         }
 
         public async Task ProduceAsync(string message)
         {
             try
-            {
-                _logger.LogDebug($"Try to  produce to {_producerConfig.BootstrapServers} , topic {_topicName}. {message}");
+            { 
+                Log.Debug($"Try to  produce to {_producerConfig.BootstrapServers} , topic {_topicName}. {message}");
                 var result = await _producer.ProduceAsync(_topicName, new Message<Null, string> { Value = message });
-                _logger.LogDebug($"Message produced to topic {_topicName}, partition {result.Partition}, offset {result.Offset}");
+                Log.Debug($"Message produced to topic {_topicName}, partition {result.Partition}, offset {result.Offset}");
             }
             catch (ProduceException<Null, string> e)
             {
-                _logger.LogError($"Failed to deliver message to topic {_topicName}: {e.Message} [{e.Error.Code}]");
+                Log.Error($"Failed to deliver message to topic {_topicName}: {e.Message} [{e.Error.Code}]");
                 throw;
             }
         }
@@ -49,7 +47,7 @@ namespace WikimediaKafkaProducer.Services
         public void Flush()
         {
             _producer.Flush(TimeSpan.FromSeconds(10));
-            _logger.LogInformation("Kafka producer flushed.");
+            Log.Information("Kafka producer flushed.");
         }
         private void LogConfiguration(ProducerConfig config)
         {
@@ -60,7 +58,7 @@ namespace WikimediaKafkaProducer.Services
                 DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
             });
 
-            _logger.LogInformation($"ProducerConfig: {configJson}");
+            Log.Information("ProducerConfig: {@ProducerConfig}",config);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Confluent.Kafka;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
+using Serilog;
 
 namespace KafkaConsumerWikimedia.Services;
 
@@ -8,9 +9,8 @@ public class KafkaConsumerService
 {
     private readonly IConsumer<Null, string> _consumer;
     private readonly string _topicName;
-    private readonly ILogger<KafkaConsumerService> _logger;
 
-    public KafkaConsumerService(string bootstrapServers, string topicName, string groupId, ILogger<KafkaConsumerService> logger)
+    public KafkaConsumerService(string bootstrapServers, string topicName, string groupId)
     {
         var config = new ConsumerConfig
         {
@@ -22,7 +22,6 @@ public class KafkaConsumerService
 
         _consumer = new ConsumerBuilder<Null, string>(config).Build();
         _topicName = topicName;
-        _logger = logger;
         LogConfiguration(config);
     }
 
@@ -36,7 +35,7 @@ public class KafkaConsumerService
                 try
                 {
                     var cr = _consumer.Consume(token);
-                    _logger.LogDebug($"Consumed record with key: {cr.Message.Key} and value: {cr.Message.Value}");
+                    Log.Debug($"Consumed record with key: {cr.Message.Key} and value: {cr.Message.Value}");
                     // Handle the message, for example, process it or insert into a database
 
                     // After processing the batch of messages, commit the offsets.
@@ -65,7 +64,7 @@ public class KafkaConsumerService
             DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
         });
 
-        _logger.LogInformation($"ConsumerConfig: {configJson}");
+        Log.Information($"ConsumerConfig: {configJson}");
     }
 
 }
