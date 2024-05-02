@@ -10,12 +10,12 @@ var conf = new ConsumerConfig
     //this is why we should not have configuration logic in our application layer
     #endregion
     GroupId = "test-consumer-group1",
-    BootstrapServers = "localhost:19092",
+    BootstrapServers = "127.0.0.1:9092",
     AutoOffsetReset = AutoOffsetReset.Earliest
 };
 
 using var c = new ConsumerBuilder<Ignore, string>(conf).Build();
-c.Subscribe("AmielTopic");
+c.Subscribe("wikimedia-recent-changes3");
 
 var cts = new CancellationTokenSource();
 Console.CancelKeyPress += (_, e) =>

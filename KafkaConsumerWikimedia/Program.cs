@@ -1,12 +1,12 @@
-﻿using KafkaProducerWikimedia.Config;
+﻿using KafkaConsumerWikimedia.Config;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using WikimediaKafkaProducer.Services;
+using KafkaConsumerWikimedia.Services;
 
-namespace WikimediaKafkaProducer
+namespace KafkaConsumerWikimedia
 {
     public class Program
     {
@@ -48,15 +48,12 @@ namespace WikimediaKafkaProducer
                     var configuration = hostContext.Configuration;
                     var kafkaSettings = configuration.GetSection("Kafka").Get<KafkaSettings>();
 
-                    services.Configure<EventStreamSettings>(hostContext.Configuration.GetSection("EventStream"));
-
                     services
                         .AddSingleton<HttpClient>()
-                        .AddSingleton<EventStreamService>()
-                        .AddSingleton<KafkaProducerService>(serviceProvider =>
+                        .AddSingleton<KafkaConsumerService>(serviceProvider =>
                         {
-                            var logger = serviceProvider.GetRequiredService<ILogger<KafkaProducerService>>();
-                            return new KafkaProducerService(kafkaSettings.BootstrapServers, kafkaSettings.TopicName, logger);
+                            var logger = serviceProvider.GetRequiredService<ILogger<KafkaConsumerService>>();
+                            return new KafkaConsumerService(kafkaSettings.BootstrapServers, kafkaSettings.TopicName, kafkaSettings.GroupId, logger);
                         })
                         .AddHostedService<WorkerService>();
                 });

@@ -9,10 +9,11 @@ namespace WikimediaKafkaProducer.Services
         private readonly IProducer<Null, string> _producer;
         private readonly string _topicName;
         private readonly ILogger<KafkaProducerService> _logger;
+        private readonly ProducerConfig _producerConfig;    
 
         public KafkaProducerService(string bootstrapServers, string topicName, ILogger<KafkaProducerService> logger)
         {
-            var pc = new ProducerConfig
+            _producerConfig = new ProducerConfig
             {
                 BootstrapServers = bootstrapServers, 
                 //settings for safe producer
@@ -24,16 +25,17 @@ namespace WikimediaKafkaProducer.Services
                 BatchSize = 32*1024,
 
             };
-            _producer = new ProducerBuilder<Null, string>(pc).Build();
+            _producer = new ProducerBuilder<Null, string>(_producerConfig).Build();
             _topicName = topicName;
             _logger = logger;
-            LogConfiguration(pc);
+            LogConfiguration(_producerConfig);
         }
 
         public async Task ProduceAsync(string message)
         {
             try
             {
+                _logger.LogDebug($"Try to  produce to {_producerConfig.BootstrapServers} , topic {_topicName}. {message}");
                 var result = await _producer.ProduceAsync(_topicName, new Message<Null, string> { Value = message });
                 _logger.LogDebug($"Message produced to topic {_topicName}, partition {result.Partition}, offset {result.Offset}");
             }
