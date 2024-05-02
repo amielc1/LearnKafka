@@ -1,10 +1,9 @@
 ﻿using KafkaConsumerWikimedia.Config;
+using KafkaConsumerWikimedia.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Serilog;
-using KafkaConsumerWikimedia.Services;
 
 namespace KafkaConsumerWikimedia
 {
@@ -47,14 +46,11 @@ namespace KafkaConsumerWikimedia
                 {
                     var configuration = hostContext.Configuration;
                     var kafkaSettings = configuration.GetSection("Kafka").Get<KafkaSettings>();
+                    var opensearchSettings = configuration.GetSection("Opensearch").Get<OpensearchSettings>();
 
-                    services
-                        .AddSingleton<HttpClient>()
-                        .AddSingleton<KafkaConsumerService>(serviceProvider =>
-                        {
-                            var logger = serviceProvider.GetRequiredService<ILogger<KafkaConsumerService>>();
-                            return new KafkaConsumerService(kafkaSettings.BootstrapServers, kafkaSettings.TopicName, kafkaSettings.GroupId);
-                        })
+                    services 
+                        .AddSingleton<OpenSearchService>(serviceProvider => new OpenSearchService(opensearchSettings.Endpoint))
+                        .AddSingleton<KafkaConsumerService>(serviceProvider => new KafkaConsumerService(kafkaSettings.BootstrapServers, kafkaSettings.TopicName, kafkaSettings.GroupId))
                         .AddHostedService<WorkerService>();
                 });
 
