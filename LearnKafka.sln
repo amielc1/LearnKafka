@@ -17,6 +17,8 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpensearchDemo", "OpensearchDemo\OpensearchDemo.csproj", "{D164AF3A-690A-4E19-A07D-87DF22DB16B8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KafkaConsumerWikimedia", "KafkaConsumerWikimedia\KafkaConsumerWikimedia.csproj", "{6C09A20D-23C5-487C-BB19-9E660677E79D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{D164AF3A-690A-4E19-A07D-87DF22DB16B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D164AF3A-690A-4E19-A07D-87DF22DB16B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D164AF3A-690A-4E19-A07D-87DF22DB16B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C09A20D-23C5-487C-BB19-9E660677E79D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C09A20D-23C5-487C-BB19-9E660677E79D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C09A20D-23C5-487C-BB19-9E660677E79D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C09A20D-23C5-487C-BB19-9E660677E79D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

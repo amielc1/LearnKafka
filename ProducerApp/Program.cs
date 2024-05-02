@@ -8,7 +8,7 @@ using Confluent.Kafka;
 // Kafka configuration in our Application logic
 #endregion
 //1 Configure Kafka Producer localhost:19092
-var config = new ProducerConfig { BootstrapServers = "localhost:19092" };
+var config = new ProducerConfig { BootstrapServers = "localhost:9092" };
 
 #region
 // Kafka framework creating producer
@@ -31,7 +31,7 @@ try
             // in the middle of our application logic we have another case of Kafka logic
             #endregion
             //6 produce message with kafka
-            var dr = await p.ProduceAsync("amiel_topic", new Message<Null, string> { Value = messageInput });
+            var dr = await p.ProduceAsync("wikimedia-recent-changes3", new Message<Null, string> { Value = messageInput });
 
             #region 
             // log produce message result => SRP

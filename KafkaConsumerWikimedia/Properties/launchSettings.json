@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "KafkaConsumerWikimedia": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
