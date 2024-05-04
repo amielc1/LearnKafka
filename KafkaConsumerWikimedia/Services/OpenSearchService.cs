@@ -26,37 +26,13 @@ public class OpenSearchService
         Log.Information("Create Opensearch client with : {endpoint}", endpoint);
     }
 
-    public  string ExtractJson(string input)
-    {
-        // Find the position of the first opening curly brace
-        int startIndex = input.IndexOf('{');
-        if (startIndex == -1)
-        {
-            return "No JSON data found.";
-        }
-
-        // Find the position of the last closing curly brace
-        int endIndex = input.LastIndexOf('}');
-        if (endIndex == -1)
-        {
-            return "No JSON data found.";
-        }
-
-        // Calculate the length of the JSON string
-        int length = endIndex - startIndex + 1;
-
-        // Extract the JSON substring
-        string jsonData = input.Substring(startIndex, length);
-        return jsonData;
-    }
     public bool Index(string document, string indexName)
     {
         var msg = new Message()
         {
             No = OpenSearchService.counter++,
-            Content = ExtractJson(document)
+            Content = document //ExtractJson(document)
         };
-         
         var response = _client.Index(msg, i => i.Index(indexName));
         Log.Debug("OpenSearchService {index} {IsValid} {@document}", indexName, response.IsValid, msg);
         if (!response.IsValid)
