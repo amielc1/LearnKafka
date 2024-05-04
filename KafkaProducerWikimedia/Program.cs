@@ -55,7 +55,6 @@ namespace WikimediaKafkaProducer
                         .AddSingleton<EventStreamService>()
                         .AddSingleton<KafkaProducerService>(serviceProvider =>
                         {
-                            var logger = serviceProvider.GetRequiredService<ILogger<KafkaProducerService>>();
                             return new KafkaProducerService(kafkaSettings.BootstrapServers, kafkaSettings.TopicName);
                         })
                         .AddHostedService<WorkerService>();

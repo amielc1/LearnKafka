@@ -6,17 +6,23 @@ namespace KafkaConsumerWikimedia.Services;
 public class WorkerService : BackgroundService
 {
 
-    private readonly KafkaConsumerService _kafkaConsumerService;
+    private readonly KafkaConsumerService _kafkaConsumer;
+    private readonly OpenSearchService _openSearchService;
+    private readonly string _indexName;
 
-    public WorkerService(
-        KafkaConsumerService kafkaConsumerService)
+    public WorkerService(KafkaConsumerService kafkaConsumer, OpenSearchService openSearchService)
     {
-        _kafkaConsumerService = kafkaConsumerService;
+        _kafkaConsumer = kafkaConsumer;
+        _openSearchService = openSearchService;
+        _indexName = "default-stream-index";
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        Log.Information("KafkaConsumerWikimedia WorkerService Started");
-        await _kafkaConsumerService.ConsumeAsync(stoppingToken);
+        Log.Information("Worker Service Started");
+        await _kafkaConsumer.ConsumeMessagesAsync(stoppingToken, message =>
+        {
+            _openSearchService.Index(message, _indexName);
+        });
     }
 }

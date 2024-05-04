@@ -25,34 +25,24 @@ public class KafkaConsumerService
         LogConfiguration(config);
     }
 
-    public Task ConsumeAsync(CancellationToken token)
+    public async Task ConsumeMessagesAsync(CancellationToken token, Action<string> handleMessage)
     {
         _consumer.Subscribe(_topicName);
+        Log.Information("Subscribe to consume from Topic {topic}", _topicName);
         try
         {
-            while (true)
+            while (!token.IsCancellationRequested)
             {
-                try
-                {
-                    var cr = _consumer.Consume(token);
-                    Log.Debug($"Consumed record with key: {cr.Message.Key} and value: {cr.Message.Value}");
-                    // Handle the message, for example, process it or insert into a database
-
-                    // After processing the batch of messages, commit the offsets.
-                    _consumer.Commit(cr);
-                }
-                catch (ConsumeException e)
-                {
-                    Console.WriteLine($"Error occurred: {e.Error.Reason}");
-                }
+                var cr = _consumer.Consume(token);
+                handleMessage(cr.Message.Value);
+                _consumer.Commit(cr);
             }
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException ex)
         {
-            // Ensure the consumer leaves the group cleanly and final offsets are committed.
+            Log.Error(ex,"Failed to consume");
             _consumer.Close();
         }
-        return Task.CompletedTask;
     }
 
     private void LogConfiguration(ConsumerConfig config)
