@@ -2,8 +2,7 @@
 <img width="553" alt="Snag_6363b28c" src="https://github.com/amielc1/LearnKafka/assets/2409265/54302b6a-9959-45d9-bb7d-672fb3ed9339">
 
 ### Use Application : 
-1.![Uploading Snag_6363832f.png…]()
- Run `docker compose up`
+1. Run `docker compose up`
 2. Run [conduktor UI](http://localhost:8080/console/home)
 3. Run [Seq Server](http://localhost:5341/)
 
