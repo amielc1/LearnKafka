@@ -17,6 +17,7 @@ public class KafkaConsumerService
             GroupId = groupId,
             BootstrapServers = bootstrapServers,
             AutoOffsetReset = AutoOffsetReset.Latest,
+            //read about this 
             EnableAutoCommit = false
         };
 
@@ -34,13 +35,22 @@ public class KafkaConsumerService
             while (!token.IsCancellationRequested)
             {
                 var cr = _consumer.Consume(token);
-                handleMessage(cr.Message.Value);
+
+                try
+                {
+                    handleMessage(cr.Message.Value);
+                }
+                catch (Exception e)
+                {
+                    Log.Error(e, "Failed to invoke action while consume message from topic {topic}", _topicName);
+                }
+
                 _consumer.Commit(cr);
             }
         }
         catch (OperationCanceledException ex)
         {
-            Log.Error(ex,"Failed to consume");
+            Log.Error(ex, "Failed to consume");
             _consumer.Close();
         }
     }
