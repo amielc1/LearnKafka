@@ -1,9 +1,8 @@
 ﻿using Confluent.Kafka;
-using Microsoft.Extensions.Logging;
-using System.Text.Json;
 using Serilog;
+using System.Text.Json;
 
-namespace KafkaConsumerWikimedia.Services;
+namespace KafkaConsumerWikiRest.Services;
 
 public class KafkaConsumerService
 {
@@ -51,7 +50,7 @@ public class KafkaConsumerService
         catch (OperationCanceledException ex)
         {
             Log.Error(ex, "Failed to consume");
-            _consumer.Close();
+            //_consumer.Close();
         }
     }
 

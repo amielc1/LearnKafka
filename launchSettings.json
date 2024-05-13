@@ -5,7 +5,7 @@
       "commandVersion": "1.0",
       "serviceActions": {
         "kafkaproducerwikimedia": "StartDebugging",
-        "kafkaconsumerwikimedia": "StartDebugging"
+        "kafkaconsumerwikirest": "StartDebugging"
       }
     }
   }

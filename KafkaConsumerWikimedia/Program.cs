@@ -4,6 +4,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.OpenApi.Models;
+
 
 namespace KafkaConsumerWikimedia
 {
@@ -36,7 +41,23 @@ namespace KafkaConsumerWikimedia
 
         static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .UseSerilog() // Use Serilog for logging
+                .UseSerilog()
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.Configure(app =>
+                    {
+                        app.UseRouting();
+                         
+                        app.UseSwagger(); 
+                        app.UseSwaggerUI();
+
+                        app.UseHttpsRedirection();
+
+                        //app.UseAuthorization();
+
+                        //app.MapControllers();
+                    });
+                })
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
                     config.SetBasePath(Directory.GetCurrentDirectory());
@@ -47,7 +68,7 @@ namespace KafkaConsumerWikimedia
                     var configuration = hostContext.Configuration;
                     var kafkaSettings = configuration.GetSection("Kafka").Get<KafkaSettings>();
                     var opensearchSettings = configuration.GetSection("Opensearch").Get<OpensearchSettings>();
-
+                    services.AddSwaggerGen();
                     services 
                         .AddSingleton<OpenSearchService>(serviceProvider => new OpenSearchService(opensearchSettings.Endpoint))
                         .AddSingleton<KafkaConsumerService>(serviceProvider => new KafkaConsumerService(kafkaSettings.BootstrapServers, kafkaSettings.TopicName, kafkaSettings.GroupId))

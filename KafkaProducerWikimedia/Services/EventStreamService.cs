@@ -1,5 +1,6 @@
 ﻿using KafkaProducerWikimedia.Config;
 using Microsoft.Extensions.Options;
+using Serilog;
 
 namespace WikimediaKafkaProducer.Services
 {
@@ -39,17 +40,17 @@ namespace WikimediaKafkaProducer.Services
         }
         public async IAsyncEnumerable<string> GetEventsAsync()
         {
-            using var stream = await _httpClient.GetStreamAsync(_streamUrl);
-            using var reader = new StreamReader(stream);
-            while (!reader.EndOfStream)
-            {
-                var line = await reader.ReadLineAsync();
-                if (!string.IsNullOrEmpty(line) && line.StartsWith("data: {"))
+             
+                using var stream = await _httpClient.GetStreamAsync(_streamUrl);
+                using var reader = new StreamReader(stream);
+                while (!reader.EndOfStream)
                 {
-                    line = ExtractJson(line);
-                    yield return line;
-                }
-            }
+                    var line = await reader.ReadLineAsync();
+                    if (!string.IsNullOrEmpty(line) && line.StartsWith("data: {"))
+                    {
+                        yield return line;
+                    }
+                } 
         }
     }
 }

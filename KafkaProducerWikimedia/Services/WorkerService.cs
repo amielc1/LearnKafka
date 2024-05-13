@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace WikimediaKafkaProducer.Services
@@ -20,15 +19,23 @@ namespace WikimediaKafkaProducer.Services
         {
             Log.Information("Starting to listen to Wikimedia recent changes...");
 
-            await foreach (var line in _eventStreamService.GetEventsAsync())
+            try
             {
-                if (stoppingToken.IsCancellationRequested) break;
+                await foreach (var line in _eventStreamService.GetEventsAsync())
+                {
+                    if (stoppingToken.IsCancellationRequested) break;
 
-                Log.Information($"Producing record: {line}");
-                await _kafkaProducerService.ProduceAsync(line);
+                    Log.Information($"Producing record: {line}");
+                    await _kafkaProducerService.ProduceAsync(line);
+                }
+
+                _kafkaProducerService.Flush();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Failed read from stream");
             }
 
-            _kafkaProducerService.Flush();
         }
     }
 }

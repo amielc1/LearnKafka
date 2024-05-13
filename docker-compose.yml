@@ -1,4 +1,4 @@
-version: '3.5'
+version: '3.4'
 
 services:
   opensearch:
@@ -12,13 +12,13 @@ services:
       - 9600:9600 # required for Performance Analyzer
 
   # console at http://localhost:5601/app/dev_tools#/console
-  opensearch-dashboards:
-    image: opensearchproject/opensearch-dashboards:1.2.0
-    ports:
-      - 5601:5601
-    environment:
-      OPENSEARCH_HOSTS: '["http://opensearch:9200"]'
-      DISABLE_SECURITY_DASHBOARDS_PLUGIN: "true"
+  # opensearch-dashboards:
+  #   image: opensearchproject/opensearch-dashboards:1.2.0
+  #   ports:
+  #     - 5601:5601
+  #   environment:
+  #     OPENSEARCH_HOSTS: '["http://opensearch:9200"]'
+  #     DISABLE_SECURITY_DASHBOARDS_PLUGIN: "true"
 
   kafkaproducerwikimedia:
     environment:
@@ -29,6 +29,7 @@ services:
       dockerfile: KafkaProducerWikimedia/Dockerfile
     depends_on:
       - seq
+      - schema-registry
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.0
@@ -90,21 +91,21 @@ services:
       POSTGRES_PASSWORD: "change_me"
       POSTGRES_HOST_AUTH_METHOD: "scram-sha-256"
 
-  conduktor-console:
-    image: conduktor/conduktor-console:1.21.0
-    hostname: conduktor-console
-    container_name: conduktor-console
-    depends_on:
-      - postgresql
-    ports:
-      - "8080:8080"
-    volumes:
-      - type: bind
-        source: "./platform-config.yml"
-        target: /opt/conduktor/platform-config.yaml
-        read_only: true
-    environment:
-      CDK_IN_CONF_FILE: /opt/conduktor/platform-config.yaml
+  # conduktor-console:
+  #   image: conduktor/conduktor-console:1.21.0
+  #   hostname: conduktor-console
+  #   container_name: conduktor-console
+  #   depends_on:
+  #     - postgresql
+  #   ports:
+  #     - "8080:8080"
+  #   volumes:
+  #     - type: bind
+  #       source: "./platform-config.yml"
+  #       target: /opt/conduktor/platform-config.yaml
+  #       read_only: true
+  #   environment:
+  #     CDK_IN_CONF_FILE: /opt/conduktor/platform-config.yaml
 
   conduktor-monitoring:
     hostname: conduktor-monitoring
@@ -121,17 +122,24 @@ services:
     ports:
       - "5341:80"
 
-  kafkaconsumerwikimedia:
+  kafkaconsumerwikirest:
+    restart: always
+    ports:
+      - "8080:80"
     environment:
       - Kafka__BootstrapServers=kafka:19092
-    image: ${DOCKER_REGISTRY-}kafkaconsumerwikimedia
+      - ASPNETCORE_ENVIRONMENT=Development
+    image: ${DOCKER_REGISTRY-}kafkaconsumerwikirest
     build:
       context: .
-      dockerfile: KafkaConsumerWikimedia/Dockerfile
+      dockerfile: KafkaConsumerWikiRest/Dockerfile
     depends_on:
       - seq
+      - schema-registry
+      - kafkaproducerwikimedia
 
 volumes:
   pg_data: {}
   conduktor_data: {}
   redpanda-0: {}
+
