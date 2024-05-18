@@ -16,7 +16,6 @@ public class KafkaConsumerService
             GroupId = groupId,
             BootstrapServers = bootstrapServers,
             AutoOffsetReset = AutoOffsetReset.Latest,
-            //read about this 
             EnableAutoCommit = false
         };
 
