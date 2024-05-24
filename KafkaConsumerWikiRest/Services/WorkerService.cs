@@ -18,10 +18,18 @@ public class WorkerService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        await Task.Yield();
         Log.Information("Worker Service Started");
-        await _kafkaConsumer.ConsumeMessagesAsync(stoppingToken, message =>
+        try
         {
-            _openSearchService.Index(message, _indexName);
-        });
+            await _kafkaConsumer.ConsumeMessagesAsync(stoppingToken, message =>
+            {
+                _openSearchService.Index(message, _indexName);
+            });
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Amiel");
+        }
     }
 }
