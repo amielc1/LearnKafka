@@ -29,7 +29,7 @@ public class WorkerService : BackgroundService
         }
         catch (Exception ex)
         {
-            Log.Error(ex, "Amiel");
+            Log.Error(ex, "Error when Start Worker service for consume from kafka");
         }
     }
 }
