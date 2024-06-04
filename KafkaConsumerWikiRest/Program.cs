@@ -11,6 +11,11 @@ builder.Host.UseSerilog((context, services, configuration) => configuration
     .WriteTo.Console()
     .WriteTo.Seq("http://localhost:5341"));
 
+builder.Host.ConfigureAppConfiguration((context, config) =>
+{
+    config.AddEnvironmentVariables();
+});
+
 // Load custom settings
 var kafkaSettings = builder.Configuration.GetSection("Kafka").Get<KafkaSettings>();
 var opensearchSettings = builder.Configuration.GetSection("Opensearch").Get<OpensearchSettings>();
@@ -27,9 +32,7 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
-
-var dev = app.Environment.IsDevelopment();
-//if (dev)
+//if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();

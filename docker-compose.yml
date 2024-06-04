@@ -129,6 +129,7 @@ services:
     environment:
       - Kafka__BootstrapServers=kafka:19092
       - ASPNETCORE_ENVIRONMENT=Development
+      - Kafka__TopicName=wikimedia-recent-changes3
     image: ${DOCKER_REGISTRY-}kafkaconsumerwikirest
     build:
       context: .
